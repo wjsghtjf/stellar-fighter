@@ -1,11 +1,13 @@
 import {PosComp, MovComp, SizeComp, VisComp, CamOutComp, CollComp, HpComp, TeamComp} from './comps';
 import {Vec} from './vec';
+import {SceneNode} from './scenes';
 
 class Entity {
-  constructor({state, comps}) {
-    this.state = state;
-    if(this.state === undefined)
+  constructor({name, state, comps}) {
+    this.name = name;
+    if(state === undefined)
       throw new Error('RequiredParam');
+    this.state = state;
     this.comps = comps || {};
   }
   addComp(comp) {
@@ -55,8 +57,10 @@ class Fighter001 extends Entity {
       this.addComp(new MovComp({}));
     if(this.comps['size'] === undefined)
       this.addComp(new SizeComp({vec: new Vec(600, 800)}));
-    if(this.comps['vis'] === undefined)
-      this.addComp(new VisComp({image: this.state.game.assets.stellarFighter}));
+    if(this.comps['vis'] === undefined) {
+      const sn = new SceneNode({ctx: this.state.ctx, pos: this.comps['pos'].vec, size: this.comps['size'].vec});
+      this.addComp(new VisComp({image: this.state.game.assets.stellarFighter, sn}));
+    }
     if(this.comps['camOut'] === undefined)
       this.addComp(new CamOutComp({}));
     if(this.comps['coll'] === undefined)
@@ -80,8 +84,10 @@ class Bullet001 extends Entity {
       this.addComp(new MovComp({vel: new Vec(0, -60)}));
     if(this.comps['size'] === undefined)
       this.addComp(new SizeComp({vec: new Vec(100, 100)}));
-    if(this.comps['vis'] === undefined)
-      this.addComp(new VisComp({image: this.state.game.assets.fire}));
+    if(this.comps['vis'] === undefined) {
+      const sn = new SceneNode({ctx: this.state.ctx, pos: this.comps['pos'].vec, size: this.comps['size'].vec});
+      this.addComp(new VisComp({image: this.state.game.assets.fire, sn}));
+    }
     if(this.comps['camOut'] === undefined)
       this.addComp(new CamOutComp({}));
     if(this.comps['coll'] === undefined)
